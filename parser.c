@@ -111,7 +111,7 @@ void parse_file ( char * filename,
     double theta;
     char axis;
     int type;
-    int step_3d = 15;
+    int step_3d = 45;
     int step = 100;
 
     if ( strncmp(line, "push", strlen(line)) == 0 ) {
@@ -284,7 +284,7 @@ void parse_file ( char * filename,
       //printf("SAVE\t%s", line);
       fgets(line, sizeof(line), f);
       *strchr(line, '\n') = 0;
-      //printf("name: %s\n", line);
+      printf("name: %s\n", line);
       //clear_screen(s);
       save_extension(s, line);
     }//end save

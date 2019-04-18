@@ -32,9 +32,10 @@ dw
 ====================*/
 void plot( screen s, zbuffer zb, color c, int x, int y, double z) {
     int newy = YRES - 1 - y;
-    if ( x >= 0 && x < XRES && newy >=0 && newy < YRES && z > zb[x][y]){
+    if ( x >= 0 && x < XRES && newy >=0 && newy < YRES && z > zb[x][newy]){
+        // printf("(%d %d): %f > %f\n", x, y, z, zb[x][y]);
         s[x][newy] = c;
-        zb[x][y] = z;
+        zb[x][newy] = z;
     }
 }
 

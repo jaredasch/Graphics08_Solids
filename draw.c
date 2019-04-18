@@ -67,7 +67,7 @@ void scanline_convert( struct matrix *points, int i, screen s, zbuffer zb ) {
 
     // Draw bottom line
     for (double y = by; y < my; y++) {
-        draw_line(x0, y, z0, x1, y, z1, s, zb, colors[(i / 3) % 5]);
+        draw_line(x0, y, z0, x1, y, z1, s, zb, colors[(i / 3) % 4]);
         x0 += (tx - bx)/(ty - by);
         x1 += (mx - bx)/(my - by);
         z0 += (tz - bz)/(ty - by);
@@ -599,9 +599,6 @@ void draw_lines( struct matrix * points, screen s, zbuffer zb, color c) {
 void draw_line(int x0, int y0, double z0,
                int x1, int y1, double z1,
                screen s, zbuffer zb, color c) {
-
-
-
   int x, y, d, A, B;
   int dy_east, dy_northeast, dx_east, dx_northeast, d_east, d_northeast;
   int loop_start, loop_end;
