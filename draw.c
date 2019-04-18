@@ -25,11 +25,11 @@ void scanline_convert( struct matrix *points, int i, screen s, zbuffer zb ) {
     double bx, by, bz;
 
     color colors[5] = {0};
-    colors[0].red = 128;
-    colors[1].red = 255;
-    colors[2].green = 128;
-    colors[3].green = 255;
-    colors[4].blue = 128;
+    colors[0].red = 51;
+    colors[1].red = 102;
+    colors[2].red = 153;
+    colors[3].red = 204;
+    colors[4].red = 255;
 
     if( points->m[1][i] >= points->m[1][i+1] && points->m[1][i] >= points->m[1][i+2] ){
         tx = points->m[0][i]; ty = points->m[1][i]; tz = points->m[2][i];
@@ -60,24 +60,30 @@ void scanline_convert( struct matrix *points, int i, screen s, zbuffer zb ) {
         }
     }
 
-    double x0 = (int) bx;
-    double x1 = (int) bx;
+    double x0 = bx;
+    double x1 = bx;
+    double z0 = bz;
+    double z1 = bz;
 
-    double z0 = (int) bz;
-    double z1 = (int) bz;
+    // Draw bottom line
+    for (double y = by; y < my; y++) {
+        draw_line(x0, y, z0, x1, y, z1, s, zb, colors[(i / 3) % 5]);
+        x0 += (tx - bx)/(ty - by);
+        x1 += (mx - bx)/(my - by);
+        z0 += (tz - bz)/(ty - by);
+        z1 += (mz - bz)/(my - by);
+    }
 
-    for(int y = by; y < ty; y++){
-        draw_line((int) x0, y, (int) z0, (int) x1, y, (int) z1, s, zb, colors[(i / 3) % 5]);
-        x0 += (tx - bx) / (ty - by);
-        z0 += (tz - bz) / (ty - by);
+    x1 = mx;
+    z1 = mz;
 
-        if(y < my){ // Still on bottom to middle line
-            x1 += (mx - bx) / (my - by);
-            z1 += (tz - mz) / (ty - my);
-        } else { // On line from middle to top
-            x1 += (tx - mx) / (ty - my);
-            z1 += (tz - mz) / (ty - my);
-        }
+    // Draw top line
+    for (double y = my; y < ty; y++) {
+        draw_line(x0, y, z0, x1, y, z1, s, zb, colors[(i / 3) % 4]);
+        x0 += (tx - bx)/(ty - by);
+        x1 += (tx - mx)/(ty - my);
+        z0 += (tz - bz)/(ty - by);
+        z1 += (tz - mz)/(ty - my);
     }
 }
 
@@ -129,27 +135,27 @@ void add_polygon( struct matrix *polygons,
 
       if ( normal[2] > 0 ) {
 
-        draw_line( polygons->m[0][point],
-                   polygons->m[1][point],
-                   polygons->m[2][point],
-                   polygons->m[0][point+1],
-                   polygons->m[1][point+1],
-                   polygons->m[2][point+1],
-                   s, zb, c);
-        draw_line( polygons->m[0][point+2],
-                   polygons->m[1][point+2],
-                   polygons->m[2][point+2],
-                   polygons->m[0][point+1],
-                   polygons->m[1][point+1],
-                   polygons->m[2][point+1],
-                   s, zb, c);
-        draw_line( polygons->m[0][point],
-                   polygons->m[1][point],
-                   polygons->m[2][point],
-                   polygons->m[0][point+2],
-                   polygons->m[1][point+2],
-                   polygons->m[2][point+2],
-                   s, zb, c);
+        // draw_line( polygons->m[0][point],
+        //            polygons->m[1][point],
+        //            polygons->m[2][point],
+        //            polygons->m[0][point+1],
+        //            polygons->m[1][point+1],
+        //            polygons->m[2][point+1],
+        //            s, zb, c);
+        // draw_line( polygons->m[0][point+2],
+        //            polygons->m[1][point+2],
+        //            polygons->m[2][point+2],
+        //            polygons->m[0][point+1],
+        //            polygons->m[1][point+1],
+        //            polygons->m[2][point+1],
+        //            s, zb, c);
+        // draw_line( polygons->m[0][point],
+        //            polygons->m[1][point],
+        //            polygons->m[2][point],
+        //            polygons->m[0][point+2],
+        //            polygons->m[1][point+2],
+        //            polygons->m[2][point+2],
+        //            s, zb, c);
 
         scanline_convert(polygons, point, s, zb);
       }
